@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class MenuFrame implements IFrame {
+public class IngameFrame implements IFrame {
 
     private float alpha = 0F;
     private boolean start = false;
@@ -21,10 +21,10 @@ public class MenuFrame implements IFrame {
     private final BufferedImage image;
     private final ImageButton button;
 
-    public MenuFrame() {
+    public IngameFrame() {
         fadeIn = true;
 
-        image = new ResourceLocation("img/buttons/startbutton.png").toImage();
+        image = RenderSystem.rotate(new ResourceLocation("img/fly.png").toImage(), 45);
         button = new ImageButton(image, new IListener() {
             @Override
             public void click(MouseEvent e) {
@@ -46,22 +46,22 @@ public class MenuFrame implements IFrame {
 
     @Override
     public void render(Graphics g, int width, int height) {
-        if (start)
-            alpha -= 0.2;
+        if (start) alpha -= 0.2;
         else if (fadeIn) {
-            alpha += 0.01;
+            alpha += 0.1;
         }
 
         if (alpha <= 0F) {
             dispose();
-            FrameManager.current(new IngameFrame());
+            FrameManager.current(new MenuFrame());
             return;
-        } else if (alpha >= 0.8F)
-            fadeIn = false;
+        } else if (alpha >= 0.8F) fadeIn = false;
 
         RenderSystem.setAlpha(alpha);
-        button.render((width - image.getWidth()) / 2, (height - image.getHeight()) / 2);
-//        button.setImage(RenderSystem.resize(new ResourceLocation("img/fly.png").toImage(), 32, 32));
+
+        button.render(10, 10);
+
+        RenderSystem.reset();
     }
 
     @Override
